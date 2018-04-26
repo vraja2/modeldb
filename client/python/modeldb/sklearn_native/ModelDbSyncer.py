@@ -360,7 +360,7 @@ class Syncer(with_metaclass(Singleton, ModelDbSyncerBase.Syncer)):
         if local_id not in self.local_id_to_object:
             self.local_id_to_object[local_id] = df
 
-    def convert_df_to_thrift(self, df):
+    def convert_df_to_thrift(self, df, metadata=None):
         """
         Converts a dataframe into a Thrift object with appropriate fields.
         """
@@ -369,8 +369,14 @@ class Syncer(with_metaclass(Singleton, ModelDbSyncerBase.Syncer)):
         filepath = self.get_path_for_df(df)
 
         dataframe_columns = self.setDataFrameSchema(df)
+        metadata_list = []
+        if metadata:
+            for key, value in metadata.items():
+                kv = modeldb_types.MetadataKV(key, str(value), str(type(value)))
+                metadata_list.append(kv)
+        print metadata_list
         modeldb_df = modeldb_types.DataFrame(
-            tid, dataframe_columns, df.shape[0], tag, filepath)
+            tid, dataframe_columns, df.shape[0], tag, filepath, metadata=metadata_list)
         return modeldb_df
 
     def convert_spec_to_thrift(self, spec):

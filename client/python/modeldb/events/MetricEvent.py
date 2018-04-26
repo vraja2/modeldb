@@ -11,20 +11,21 @@ class MetricEvent(Event):
     """
 
     def __init__(
-            self, df, model, labelCol, predictionCol, metricType, metricValue):
+            self, df, model, labelCol, predictionCol, metricType, metricValue, metadata=None):
         self.df = df
         self.model = model
         self.metric_type = metricType
         self.metric_value = metricValue
         self.label_col = labelCol
         self.prediction_col = predictionCol
+        self.metadata = metadata
 
     def make_event(self, syncer):
         """
         Constructs a thrift MetricEvent object with appropriate fields.
         """
         syncable_transformer = syncer.convert_model_to_thrift(self.model)
-        syncable_dataframe = syncer.convert_df_to_thrift(self.df)
+        syncable_dataframe = syncer.convert_df_to_thrift(self.df, self.metadata)
         me = modeldb_types.MetricEvent(
             syncable_dataframe,
             syncable_transformer,

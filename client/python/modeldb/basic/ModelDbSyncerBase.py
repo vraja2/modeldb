@@ -244,7 +244,8 @@ class Syncer(with_metaclass(Singleton, object)):
     def set_columns(self, df):
         return []
 
-    def convert_df_to_thrift(self, dataset):
+    def convert_df_to_thrift(self, dataset, metadata=None):
+        print 'base syncer!'
         dataset_id = self.get_modeldb_id_for_object(dataset)
         if dataset_id != -1:
             return modeldb_types.DataFrame(dataset_id, [], -1, "", "", [])
