@@ -13,10 +13,10 @@ import sklearn.metrics
 
 
 def compute_metrics(
-        model, metric_func, actual, predicted, X, prediction_col, label_col, metadata,
+        model, metric_func, actual, predicted, X, prediction_col, label_col, metadata, metric_name,
         **params):
     score = metric_func(actual, predicted, **params)
     metric_event = MetricEvent(
-        X, model, label_col, prediction_col, metric_func.__name__, score, metadata=metadata)
+        X, model, label_col, prediction_col, metric_name, score, metadata=metadata)
     ModelDbSyncer.Syncer.instance.add_to_buffer(metric_event)
     return score
