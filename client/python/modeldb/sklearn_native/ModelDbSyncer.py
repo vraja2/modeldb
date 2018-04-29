@@ -374,7 +374,6 @@ class Syncer(with_metaclass(Singleton, ModelDbSyncerBase.Syncer)):
             for key, value in metadata.items():
                 kv = modeldb_types.MetadataKV(key, str(value), str(type(value)))
                 metadata_list.append(kv)
-        print metadata_list
         modeldb_df = modeldb_types.DataFrame(
             tid, dataframe_columns, df.shape[0], tag, filepath, metadata=metadata_list)
         return modeldb_df
