@@ -7,12 +7,16 @@ services:
       default:
         aliases:
           - mongo
+    volumes:
+      - /data/mongo-db-data:/data/db
     ports:
       - "27017:27017"
   backend:
     build:
       context: .
       dockerfile: dockerbuild/Dockerfile-backend
+    volumes:
+      - /data/sql-data/modeldb.db:/modeldb/server/modeldb.db
     image: mitdbg/modeldb-backend:latest
     networks:
       default:
