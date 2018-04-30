@@ -24,7 +24,8 @@ class MetricEvent(Event):
         """
         Constructs a thrift MetricEvent object with appropriate fields.
         """
-        syncable_transformer = syncer.convert_model_to_thrift(self.model)
+        model_id = self.metadata['MODELDB_model_id'] if 'MODELDB_model_id' in self.metadata else None
+        syncable_transformer = syncer.convert_model_to_thrift(self.model, model_id=model_id)
         syncable_dataframe = syncer.convert_df_to_thrift(self.df, self.metadata)
         me = modeldb_types.MetricEvent(
             syncable_dataframe,

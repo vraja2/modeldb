@@ -42,7 +42,7 @@ numpy calls
 '''
 
 
-def fit_fn(self, x, y=None, sample_weight=None):
+def fit_fn(self, x, y=None, sample_weight=None, metadata=None):
     """
     Overrides the fit function for all models except for
     Pipeline and GridSearch, and Cross Validation,
@@ -54,7 +54,8 @@ def fit_fn(self, x, y=None, sample_weight=None):
         model = self.fit(x)
     else:
         model = self.fit(x, y)
-    fit_event = FitEvent(model, self, x)
+    metadata = metadata if metadata else {}
+    fit_event = FitEvent(model, self, x, metadata=metadata)
     Syncer.instance.add_to_buffer(fit_event)
 
 
@@ -337,11 +338,11 @@ class Syncer(with_metaclass(Singleton, ModelDbSyncerBase.Syncer)):
             data_frame_cols.append(dfc)
         return data_frame_cols
 
-    def convert_model_to_thrift(self, model):
+    def convert_model_to_thrift(self, model, model_id=None):
         """
         Converts a model into a Thrift object with appropriate fields.
         """
-        tid = self.get_modeldb_id_for_object(model)
+        tid = model_id if model_id else self.get_modeldb_id_for_object(model)
         tag = self.get_tag_for_object(model)
         transformer_type = model.__class__.__name__
         t = modeldb_types.Transformer(tid, transformer_type, tag)
