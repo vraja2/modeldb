@@ -19,6 +19,7 @@ from sklearn.svm import *
 from sklearn.pipeline import Pipeline
 from sklearn.grid_search import GridSearchCV
 from sklearn import cross_validation
+from sklearn.neural_network import MLPRegressor
 import sklearn.metrics
 
 from thrift import Thrift
@@ -427,7 +428,7 @@ class Syncer(with_metaclass(Singleton, ModelDbSyncerBase.Syncer)):
         # Linear Models (transform has been deprecated)
         for class_name in [LogisticRegression, LinearRegression,
                            CalibratedClassifierCV, RandomForestClassifier,
-                           BaggingClassifier]:
+                           BaggingClassifier, MLPRegressor, Lasso]:
             setattr(class_name, "fit_sync", fit_fn)
             setattr(class_name, "predict_sync", predict_fn)
             setattr(class_name, "predict_proba_sync", predict_proba_fn)
